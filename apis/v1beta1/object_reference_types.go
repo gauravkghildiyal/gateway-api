@@ -91,6 +91,8 @@ type SecretObjectReference struct {
 // References to objects with invalid Group and Kind are not valid, and must
 // be rejected by the implementation, with appropriate Conditions set
 // on the containing object.
+//
+// +kubebuilder:validation:XValidation:message="Must have port for Service reference",rule="((!has(self.group) || size(self.group) == 0) && (!has(self.kind) || self.kind == 'Service')) ? has(self.port) : true"
 type BackendObjectReference struct {
 	// Group is the group of the referent. For example, "gateway.networking.k8s.io".
 	// When unspecified or empty string, core API group is inferred.

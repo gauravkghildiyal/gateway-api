@@ -344,6 +344,10 @@ spec:
                         required:
                         - name
                         type: object
+                        x-kubernetes-validations:
+                        - message: Must have port for Service reference
+                          rule: '((!has(self.group) || size(self.group) == 0) && (!has(self.kind)
+                            || self.kind == ''Service'')) ? has(self.port) : true'
                       maxItems: 16
                       minItems: 1
                       type: array
