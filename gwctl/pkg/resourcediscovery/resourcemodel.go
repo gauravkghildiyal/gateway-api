@@ -359,9 +359,9 @@ func (rm *ResourceModel) calculateEffectivePoliciesForGateways() error {
 		}
 
 		// Fetch all policies.
-		gatewayClassPolicies := convertPoliciesMapToSlice(gatewayNode.GatewayClass.Policies)
-		gatewayNamespacePolicies := convertPoliciesMapToSlice(gatewayNode.Namespace.Policies)
-		gatewayPolicies := convertPoliciesMapToSlice(gatewayNode.Policies)
+		gatewayClassPolicies := convertPoliciesMapToSlice(filterInheritablePolicies(gatewayNode.GatewayClass.Policies))
+		gatewayNamespacePolicies := convertPoliciesMapToSlice(filterInheritablePolicies(gatewayNode.Namespace.Policies))
+		gatewayPolicies := convertPoliciesMapToSlice(filterInheritablePolicies(gatewayNode.Policies))
 
 		// Merge policies by their kind.
 		gatewayClassPoliciesByKind, err := policymanager.MergePoliciesOfSimilarKind(gatewayClassPolicies)
@@ -402,8 +402,8 @@ func (rm *ResourceModel) calculateEffectivePoliciesForHTTPRoutes() error {
 
 		// Step 1: Aggregate all policies of the HTTPRoute and the
 		// HTTPRoute-namespace.
-		httpRoutePolicies := convertPoliciesMapToSlice(httpRouteNode.Policies)
-		httpRouteNamespacePolicies := convertPoliciesMapToSlice(httpRouteNode.Namespace.Policies)
+		httpRoutePolicies := convertPoliciesMapToSlice(filterInheritablePolicies(httpRouteNode.Policies))
+		httpRouteNamespacePolicies := convertPoliciesMapToSlice(filterInheritablePolicies(httpRouteNode.Namespace.Policies))
 
 		// Step 2: Merge HTTPRoute and HTTPRoute-namespace policies by their kind.
 		httpRoutePoliciesByKind, err := policymanager.MergePoliciesOfSimilarKind(httpRoutePolicies)
@@ -447,8 +447,8 @@ func (rm *ResourceModel) calculateEffectivePoliciesForBackends() error {
 		result := make(map[gatewayID]map[policymanager.PolicyCrdID]policymanager.Policy)
 
 		// Step 1: Aggregate all policies of the Backend and the Backend-namespace.
-		backendPolicies := convertPoliciesMapToSlice(backendNode.Policies)
-		backendNamespacePolicies := convertPoliciesMapToSlice(backendNode.Namespace.Policies)
+		backendPolicies := convertPoliciesMapToSlice(filterInheritablePolicies(backendNode.Policies))
+		backendNamespacePolicies := convertPoliciesMapToSlice(filterInheritablePolicies(backendNode.Namespace.Policies))
 
 		// Step 2: Merge Backend and Backend-namespace policies by their kind.
 		backendPoliciesByKind, err := policymanager.MergePoliciesOfSimilarKind(backendPolicies)
