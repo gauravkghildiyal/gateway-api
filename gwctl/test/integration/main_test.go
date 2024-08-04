@@ -1,5 +1,5 @@
 /*
-Copyright 2023 The Kubernetes Authors.
+Copyright 2024 The Kubernetes Authors.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -14,17 +14,20 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package policymanager
+package integration
 
-import "sigs.k8s.io/gateway-api/gwctl/pkg/common"
+import (
+	"flag"
+	"os"
+	"testing"
 
-// ToPolicyRefs returns the Object references of all given policies. Note that
-// these are not the value of targetRef within the Policies but rather the
-// reference to the Policy object itself.
-func ToPolicyRefs(policies []Policy) []common.GKNN {
-	var result []common.GKNN
-	for _, policy := range policies {
-		result = append(result, policy.GKNN())
-	}
-	return result
+	"k8s.io/klog/v2"
+)
+
+func TestMain(m *testing.M) {
+	fs := flag.NewFlagSet("mock-flags", flag.PanicOnError)
+	klog.InitFlags(fs)
+	fs.Set("v", "3") // Set klog verbosity.
+
+	os.Exit(m.Run())
 }
